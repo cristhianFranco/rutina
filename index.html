@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mi rutina en casa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9EEF3; --surface:#FFFFFF; --ink:#16263A; --muted:#55657A; --line:#CCD5DF;
+  --plate:#2A55C9; --plate-ink:#FFFFFF; --gold:#E2A928; --gold-soft:#FBF0D6; --gold-ink:#5A3F00;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1722; --surface:#182231; --ink:#E4EAF1; --muted:#9AA9BB; --line:#2A3748;
+    --plate:#5B83F0; --plate-ink:#0B1220; --gold:#F0BE4A; --gold-soft:#3A2F14; --gold-ink:#F7DA92;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1722; --surface:#182231; --ink:#E4EAF1; --muted:#9AA9BB; --line:#2A3748;
+  --plate:#5B83F0; --plate-ink:#0B1220; --gold:#F0BE4A; --gold-soft:#3A2F14; --gold-ink:#F7DA92;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5}
+.wrap{max-width:680px;margin:0 auto;padding:20px 16px 48px}
+h1,h2,.cond{font-family:"Barlow Condensed","Arial Narrow",system-ui,sans-serif}
+h1{font-size:2.6rem;line-height:1;margin:8px 0 4px;font-weight:800;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0 0 20px}
+.phases{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.phase{border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:10px 12px;text-align:left;cursor:pointer;font:inherit}
+.phase b{display:block;font-family:"Barlow Condensed",sans-serif;font-size:1.35rem;line-height:1.1}
+.phase span{font-size:.85rem;color:var(--muted)}
+.phase[aria-pressed="true"]{border-color:var(--plate);box-shadow:inset 0 0 0 1px var(--plate)}
+.days{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:8px;scrollbar-width:none}
+.days::-webkit-scrollbar{display:none}
+.day{flex:0 0 auto;border:none;border-radius:999px;padding:8px 16px;background:var(--surface);color:var(--ink);font:600 .95rem "Barlow",sans-serif;cursor:pointer;border:1px solid var(--line)}
+.day[aria-pressed="true"]{background:var(--plate);color:var(--plate-ink);border-color:var(--plate)}
+.dayhead{margin:20px 0 4px}
+.dayhead h2{font-size:3.2rem;line-height:.95;margin:0;font-weight:800;text-transform:none}
+.dayhead p{margin:4px 0 0;color:var(--muted)}
+ol.list{list-style:none;margin:16px 0 0;padding:0;counter-reset:ex}
+.ex{background:var(--surface);border:1px solid var(--line);border-radius:16px;margin-bottom:10px;overflow:hidden}
+.ex>button{all:unset;box-sizing:border-box;display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:center;width:100%;padding:14px;cursor:pointer}
+.ex>button:focus-visible{outline:3px solid var(--plate);outline-offset:-3px;border-radius:16px}
+.num{counter-increment:ex;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:1.6rem;color:var(--muted);text-align:center}
+.num::before{content:counter(ex)}
+.name{font-weight:600;font-size:1.05rem;line-height:1.25}
+.sr{font-family:"Barlow Condensed",sans-serif;font-size:1.15rem;color:var(--plate);font-weight:700}
+.plate{width:58px;height:58px;border-radius:50%;background:var(--gold);color:#2A1F00;display:grid;place-items:center;text-align:center;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:.95rem;line-height:1;position:relative;padding:4px}
+.plate::after{content:"";position:absolute;width:10px;height:10px;border-radius:50%;background:var(--surface);top:50%;left:50%;transform:translate(-50%,-50%);opacity:0}
+.body{display:none;padding:0 16px 16px 60px}
+.ex.open .body{display:block}
+.start{background:var(--gold-soft);color:var(--gold-ink);border-radius:10px;padding:8px 12px;font-weight:600;margin:0 0 12px}
+.body h3{font-size:.95rem;margin:12px 0 4px}
+.body ol{margin:0;padding-left:20px}
+.body li{margin-bottom:4px}
+.warn{margin:8px 0 0;color:var(--muted)}
+.rest{color:var(--muted);font-size:.9rem;margin-top:8px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
+.video{display:inline-flex;align-items:center;gap:8px;background:var(--plate);color:var(--plate-ink);text-decoration:none;font-weight:600;padding:10px 14px;border-radius:10px}
+.video:focus-visible,.log input:focus-visible,.phase:focus-visible,.day:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.log{display:flex;align-items:center;gap:6px;font-size:.9rem;color:var(--muted)}
+.log input{width:110px;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px}
+.vid{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;margin:4px 0 12px}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.yt-link{color:var(--plate);font-weight:600;text-decoration:none}
+.rules{margin-top:32px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.rules h2{font-size:1.8rem;margin:0 0 8px}
+.rules p{margin:0 0 10px}
+.rest-day{background:var(--surface);border:1px dashed var(--line);border-radius:16px;padding:16px;margin-top:16px;color:var(--muted)}
+@media (max-width:420px){.body{padding-left:16px}h1{font-size:2.2rem}.dayhead h2{font-size:2.7rem}}
+@media (prefers-reduced-motion:no-preference){.ex.open .body{animation:open .18s ease-out}@keyframes open{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Mi rutina en casa</h1>
+  <p class="sub">Toca un ejercicio para ver el video, cómo se hace y el peso para arrancar.</p>
+
+  <div class="phases" role="group" aria-label="Fase">
+    <button class="phase" data-phase="1"><b>Fase 1 · 4 días</b><span>2 al 29 de noviembre</span></button>
+    <button class="phase" data-phase="2"><b>Fase 2 · 5 días</b><span>30 de nov. al 24 de enero</span></button>
+  </div>
+
+  <div class="days" id="days" role="group" aria-label="Día"></div>
+  <div id="view"></div>
+
+  <section class="rules">
+    <h2>Cómo usar los pesos</h2>
+    <p>Los pesos son un punto de partida. En la fase 1, termina cada serie sintiendo que te quedaban unas 3 repeticiones; en la fase 2, 1 o 2.</p>
+    <p>Si con el peso sugerido pasas del tope de repeticiones con facilidad, súbelo en la siguiente serie. Si no llegas al mínimo, bájalo.</p>
+    <p>Cuando completes todas las series en el tope del rango con buena técnica, sube lo mínimo posible (aquí te sirven los discos de 0,5 y 1,25 kg) y vuelve a empezar desde abajo del rango.</p>
+    <p>Por mancuerna significa el peso de cada mancuerna con la manija incluida. Total significa barra más discos.</p>
+  </section>
+</div>
+
+<script>
+const E = {
+  pinc:{n:"Press inclinado con mancuernas",w:"14–16 kg por mancuerna",r:"2 min",q:"press inclinado con mancuernas técnica",
+    how:["Banco a unos 30°, espalda y glúteos apoyados, pies firmes en el piso.","Junta los omóplatos y llévalos hacia abajo antes de empezar.","Baja las mancuernas en 2–3 s hasta el pecho alto, con los codos a unos 45° del torso.","Empuja hacia arriba y un poco hacia adentro, sin chocar las mancuernas."],
+    err:"Inclinar el banco más de 45°: el trabajo se va al hombro y deja de ser pecho alto."},
+  fondos:{n:"Fondos en paralelas",w:"Peso corporal (banda si no llegas a 8)",r:"2 min",q:"fondos en paralelas pecho técnica",
+    how:["Brazos estirados y hombros lejos de las orejas.","Inclina el torso un poco hacia adelante para cargar más el pecho.","Baja hasta que el brazo quede paralelo al piso, sin dolor en el hombro.","Sube empujando hasta estirar los brazos."],
+    err:"Bajar demasiado con los hombros cayendo hacia adelante."},
+  pplano:{n:"Press plano con mancuernas",w:"16–18 kg por mancuerna",r:"2 min",q:"press de banca con mancuernas técnica",
+    how:["Banco plano, omóplatos juntos y hacia abajo, pies firmes.","Mancuernas sobre el pecho con los brazos casi estirados.","Baja en 2–3 s hasta la altura del pecho, codos a unos 45°.","Empuja de vuelta arriba sin rebotar abajo."],
+    err:"Abrir los codos a 90°: carga el hombro y no el pecho."},
+  lat:{n:"Elevaciones laterales",w:"5–6 kg por mancuerna",r:"60–90 s",q:"elevaciones laterales mancuernas técnica",
+    how:["De pie, torso apenas inclinado hacia adelante, codos ligeramente flexionados.","Sube los brazos hacia los lados hasta la altura de los hombros, guiando con los codos.","Baja lento, en 2–3 s."],
+    err:"Balancear el cuerpo o subir los hombros hacia las orejas. Si pasa, baja el peso."},
+  extcab:{n:"Extensión de tríceps sobre la cabeza",w:"12–14 kg (una mancuerna a dos manos)",r:"90 s",q:"extensión de tríceps sobre la cabeza mancuerna técnica",
+    how:["Sentado con el respaldo vertical, sujeta una mancuerna con ambas manos detrás de la cabeza.","Codos apuntando hacia arriba, cerca de la cabeza.","Estira los brazos sin mover los codos.","Baja controlado hasta sentir el estiramiento del tríceps."],
+    err:"Abrir mucho los codos o arquear la espalda baja."},
+  face:{n:"Face pull con banda",w:"Banda ligera",r:"60 s",q:"face pull con banda elástica técnica",
+    how:["Ancla la banda a la altura de la cara (marco de la puerta o barra).","Da un paso atrás para tensarla.","Jala hacia la cara separando las manos, con los codos altos.","Aprieta los omóplatos 1 s y regresa lento."],
+    err:"Echarte hacia atrás con la espalda baja para jalar."},
+  dompro:{n:"Dominadas pronas",w:"Peso corporal; banda para completar",r:"2–3 min",q:"dominadas pronas técnica correcta",
+    how:["Agarre por encima, un poco más ancho que los hombros.","Desde colgado, baja los hombros antes de jalar.","Sube llevando el pecho hacia la barra hasta pasar la barbilla.","Baja controlado hasta estirar los brazos."],
+    err:"Medias repeticiones o balancearte. Ya haces 6 limpias: si en una serie no llegas, termínala con banda o con bajadas lentas."},
+  remob:{n:"Remo con barra",w:"30–35 kg total",r:"2 min",q:"remo con barra técnica",
+    how:["Pies a la anchura de la cadera, rodillas suaves, torso inclinado a unos 45° con la espalda recta.","Agarre por encima, a la anchura de los hombros.","Jala la barra hacia el ombligo llevando los codos atrás.","Baja controlado sin perder la posición."],
+    err:"Redondear la espalda o enderezar el torso para subir con impulso."},
+  remom:{n:"Remo con mancuerna",w:"18–20 kg",r:"90 s",q:"remo con mancuerna a una mano técnica",
+    how:["Rodilla y mano del mismo lado sobre el banco plano, espalda paralela al piso.","Jala la mancuerna hacia la cadera, no hacia el pecho.","Baja hasta estirar el brazo por completo."],
+    err:"Girar el torso para subir más peso."},
+  post:{n:"Elevaciones posteriores",w:"4–5 kg por mancuerna",r:"60 s",q:"pájaros deltoides posterior banco inclinado técnica",
+    how:["Pecho apoyado en el banco inclinado a 30–45°, brazos colgando.","Abre los brazos hacia los lados, codos apenas flexionados, hasta la altura de los hombros.","Baja lento."],
+    err:"Juntar los omóplatos y convertirlo en remo: mueve los brazos, no la espalda."},
+  curlb:{n:"Curl con barra",w:"20–25 kg total",r:"90 s",q:"curl de bíceps con barra técnica",
+    how:["De pie, agarre por debajo a la anchura de los hombros, codos pegados al cuerpo.","Sube la barra sin adelantar los codos.","Baja en 2–3 s hasta estirar los brazos."],
+    err:"Ayudarte con la cadera o la espalda."},
+  martillo:{n:"Curl martillo",w:"10–12 kg por mancuerna",r:"60–90 s",q:"curl martillo técnica",
+    how:["Palmas mirándose entre sí durante todo el recorrido.","Codos fijos a los lados.","Sube y baja controlado, alternando o a la vez."],
+    err:"Balancear las mancuernas."},
+  rueda:{n:"Rueda abdominal",w:"De rodillas sobre la colchoneta",r:"90 s",q:"rueda abdominal de rodillas técnica",
+    how:["De rodillas, con la rueda debajo de los hombros.","Aprieta glúteos y abdomen, con la pelvis metida.","Rueda hacia adelante solo hasta donde puedas mantener la espalda neutra.","Regresa jalando con el abdomen."],
+    err:"Hundir la espalda baja. Acorta el recorrido hasta que aguantes la posición."},
+  bulg:{n:"Sentadilla búlgara",w:"8–10 kg por mancuerna",r:"90 s entre piernas",q:"sentadilla búlgara con mancuernas técnica",
+    how:["Empeine del pie de atrás sobre el banco, pie de adelante a un paso largo.","Torso un poco inclinado hacia adelante.","Baja en vertical hasta que la rodilla de atrás casi toque el piso.","Empuja con todo el pie de adelante para subir."],
+    err:"Poner el pie de adelante muy cerca del banco: pierdes el equilibrio y cargas la rodilla."},
+  pmr:{n:"Peso muerto rumano con barra",w:"35–40 kg total",r:"2 min",q:"peso muerto rumano con barra técnica",
+    how:["De pie con la barra, agarre por encima, rodillas suaves.","Empuja la cadera hacia atrás deslizando la barra pegada a los muslos.","Baja hasta sentir tensión en la parte de atrás del muslo, con la espalda recta.","Sube empujando la cadera hacia adelante y aprieta glúteos."],
+    err:"Redondear la espalda o doblar tanto las rodillas que se vuelve sentadilla."},
+  goblet:{n:"Sentadilla goblet",w:"18–20 kg (una mancuerna)",r:"90 s",q:"sentadilla goblet técnica",
+    how:["Mancuerna vertical contra el pecho, pies algo más anchos que la cadera.","Baja entre las piernas con el pecho alto y los codos por dentro de las rodillas.","Llega tan profundo como puedas sin redondear la espalda.","Sube empujando el piso."],
+    err:"Rodillas hacia adentro o talones que se levantan."},
+  pant:{n:"Pantorrillas de pie",w:"16–20 kg por mancuerna",r:"60 s",q:"elevación de talones de pie con mancuernas técnica",
+    how:["Puntas de los pies sobre un escalón o un disco, talones al aire.","Baja el talón hasta estirar bien.","Sube lo más alto posible y sostén 1 s arriba."],
+    err:"Rebotar abajo y hacer el recorrido corto."},
+  colgado:{n:"Elevación de piernas colgado",w:"Peso corporal (rodillas al pecho)",r:"90 s",q:"elevación de rodillas colgado en barra técnica",
+    how:["Cuelga de la barra o de las correas, hombros activos.","Sube las rodillas al pecho enrollando la pelvis, no solo levantando las piernas.","Baja lento sin balancearte."],
+    err:"Usar el balanceo para subir."},
+  hip:{n:"Hip thrust con barra",w:"40 kg total",r:"2 min",q:"hip thrust con barra en banco técnica",
+    how:["Espalda alta apoyada en el borde del banco, barra sobre la cadera con una toalla de almohadilla.","Pies a la anchura de la cadera; arriba, las espinillas quedan verticales.","Sube la cadera hasta que el torso quede paralelo al piso y aprieta glúteos 1 s.","Baja controlado."],
+    err:"Terminar arqueando la espalda baja en vez de apretar glúteos. Mantén la barbilla metida."},
+  zanc:{n:"Zancadas con mancuernas",w:"10–12 kg por mancuerna",r:"90 s",q:"zancadas con mancuernas técnica",
+    how:["De pie, una mancuerna en cada mano.","Da un paso largo al frente y baja hasta que ambas rodillas queden a unos 90°.","Empuja con el pie de adelante para volver o avanzar."],
+    err:"Pasos cortos que cargan la rodilla delantera."},
+  pmr1:{n:"Peso muerto rumano a una pierna",w:"12–14 kg (una mancuerna)",r:"90 s",q:"peso muerto rumano a una pierna mancuerna técnica",
+    how:["Mancuerna en la mano contraria a la pierna de apoyo.","Inclina el torso mientras la otra pierna sube atrás, en línea con la espalda.","Baja hasta sentir el estiramiento atrás del muslo, cadera nivelada.","Sube apretando el glúteo de la pierna de apoyo."],
+    err:"Abrir la cadera hacia un lado. Si pierdes el equilibrio, apoya la mano libre en la pared."},
+  pant1:{n:"Pantorrilla a una pierna",w:"10–14 kg (una mancuerna)",r:"60 s",q:"elevación de talón a una pierna técnica",
+    how:["Punta de un pie sobre un escalón, la otra pierna doblada atrás.","Sujeta la mancuerna del mismo lado y apóyate en la pared con la otra mano.","Baja el talón hasta estirar y sube lo más alto posible."],
+    err:"Recorrido corto y con rebote."},
+  plancha:{n:"Plancha lateral",w:"Peso corporal",r:"60 s",q:"plancha lateral técnica",
+    how:["Apoyado en el antebrazo, codo bajo el hombro, piernas estiradas.","Sube la cadera hasta formar una línea recta de cabeza a pies.","Sostén sin dejar caer la cadera."],
+    err:"Dejar caer la cadera o girar el pecho hacia el piso."},
+  domsup:{n:"Dominadas supinas",w:"Peso corporal; banda para completar",r:"2 min",q:"dominadas supinas técnica",
+    how:["Agarre por debajo, a la anchura de los hombros.","Desde colgado, baja los hombros antes de jalar.","Sube hasta pasar la barbilla sobre la barra.","Baja controlado hasta estirar los brazos."],
+    err:"Medias repeticiones arriba y abajo."},
+  pmil:{n:"Press militar con mancuernas",w:"12–14 kg por mancuerna",r:"2 min",q:"press militar sentado con mancuernas técnica",
+    how:["Sentado con el respaldo vertical, espalda y glúteos pegados.","Mancuernas a la altura de las orejas, codos un poco hacia adelante.","Empuja hacia arriba hasta casi estirar los brazos.","Baja controlado hasta las orejas."],
+    err:"Arquear la espalda baja para empujar."},
+  flex:{n:"Flexiones con banda",w:"Peso corporal + banda (o press inclinado)",r:"90 s",q:"flexiones con banda elástica técnica",
+    how:["Pasa la banda por la espalda, un extremo en cada mano.","Manos algo más anchas que los hombros, cuerpo en línea recta.","Baja el pecho casi hasta el piso, codos a unos 45°.","Empuja hasta estirar los brazos."],
+    err:"Dejar caer la cadera."},
+  curlinc:{n:"Curl inclinado",w:"8–10 kg por mancuerna",r:"60–90 s",q:"curl inclinado con mancuernas técnica",
+    how:["Banco a 45–60°, espalda apoyada, brazos colgando detrás del torso.","Sube sin adelantar los codos.","Baja lento hasta estirar del todo."],
+    err:"Despegar la espalda del banco."},
+  extac:{n:"Extensión de tríceps acostado",w:"8–10 kg por mancuerna",r:"60 s",q:"extensión de tríceps acostado con mancuernas técnica",
+    how:["Acostado en el banco plano, mancuernas arriba con las palmas enfrentadas.","Dobla solo los codos para bajarlas a los lados de la cabeza.","Estira los brazos sin mover los codos."],
+    err:"Abrir los codos hacia afuera."},
+  apart:{n:"Pull-apart con banda",w:"Banda ligera",r:"60 s",q:"band pull apart técnica",
+    how:["Brazos estirados al frente a la altura del pecho, banda tensa.","Separa las manos hasta que la banda toque el pecho, juntando los omóplatos.","Regresa lento."],
+    err:"Doblar los codos o subir los hombros."}
+};
+
+const V = {pinc:"9fy0A5xWsgk",fondos:"OgjaUueRiII",pplano:"dElcR5RfmOg",lat:"SYle9FXttyE",extcab:"PyNaiTP1PIA",face:"7Ks6tmEuKNo",dompro:"8mhDd9Ahl1M",remob:"ztFJOZQO2vQ",remom:"ThYEWIpPB0o",post:"pgxSZCkaP7s",curlb:"wGYyXpZ4kVs",martillo:"i60DlC_Wj0E",rueda:"xIzWGVYFAH8",bulg:"6d6HlPWgAUs",pmr:"pCrNlGFo7h4",goblet:"FoQsAJ1n0Mk",pant:"1cVC4bwALtE",colgado:"_2tjn3ylBcU",hip:"3SHkXmrQtxQ",zanc:"y8zPm7gJR_E",pmr1:"-2h7UPouOqc",pant1:"MgYx0JJ_B1o",plancha:"euvthEjjuio",domsup:"rfMaANCbzx8",pmil:"A_YA3DM-uPk",flex:"KdX2r-8opqE",curlinc:"P1L6CD-tSnE",extac:"Z8ovGUa8NoM",apart:"NqWQ9n6XDCk"};
+
+const PLAN = {
+  "1":[
+    {d:"Lunes",t:"Empuje",x:[["pinc","3 × 8–12"],["fondos","3 × 8–12"],["pplano","3 × 8–12"],["lat","3 × 12–20"],["extcab","3 × 10–12"],["face","3 × 15–20"]]},
+    {d:"Martes",t:"Jalón",x:[["dompro","3 × 6–10"],["remob","3 × 8–12"],["remom","3 × 10–12"],["post","3 × 15"],["curlb","3 × 8–12"],["martillo","3 × 10–12"],["rueda","3 × 6–10"]]},
+    {d:"Miércoles",t:"Pierna A",x:[["bulg","3 × 8–10 c/pierna"],["pmr","3 × 8–12"],["goblet","3 × 12–15"],["pant","3 × 15–20"],["colgado","3 × 8–12"]]},
+    {d:"Jueves",rest:"Descanso o bicicleta 25–35 min a ritmo cómodo."},
+    {d:"Viernes",rest:"Descanso o bicicleta 25–35 min a ritmo cómodo."},
+    {d:"Sábado",t:"Pierna B",x:[["hip","3 × 8–12"],["zanc","3 × 10 c/pierna"],["pmr1","3 × 10 c/pierna"],["pant1","3 × 12–15"],["rueda","3 × 6–10"],["plancha","3 × 30–45 s c/lado"]]},
+    {d:"Domingo",rest:"Descanso. Cada dos domingos, medidas."}
+  ],
+  "2":[
+    {d:"Lunes",t:"Empuje",x:[["pinc","4 × 8–12"],["fondos","4 × 8–15"],["pplano","3 × 8–12"],["lat","4 × 12–20"],["extcab","3 × 10–12"],["face","3 × 15–20"]]},
+    {d:"Martes",t:"Jalón",x:[["dompro","4 × 6–10"],["remob","4 × 8–12"],["remom","3 × 10–12"],["post","3 × 15"],["curlb","3 × 8–12"],["martillo","3 × 10–12"],["rueda","3 × 6–10"]]},
+    {d:"Miércoles",t:"Pierna A",x:[["bulg","4 × 8–10 c/pierna"],["pmr","4 × 8–12"],["goblet","3 × 12–15"],["pant","4 × 15–20"],["colgado","3 × 8–12"]]},
+    {d:"Jueves",rest:"Descanso o bicicleta 30 min."},
+    {d:"Viernes",t:"Torso",x:[["domsup","3 × 6–10"],["pmil","4 × 8–12"],["flex","3 × 10–15"],["lat","3 × 12–20"],["curlinc","2 × 10–12"],["extac","2 × 12–15"],["apart","3 × 15–20"]]},
+    {d:"Sábado",t:"Pierna B",x:[["hip","4 × 8–12"],["zanc","3 × 10 c/pierna"],["pmr1","3 × 10 c/pierna"],["pant1","3 × 12–15"],["rueda","3 × 6–10"],["plancha","3 × 30–45 s c/lado"]]},
+    {d:"Domingo",rest:"Descanso. Cada dos domingos, medidas."}
+  ]
+};
+
+const store = {
+  get(k){try{return localStorage.getItem(k)}catch(e){return null}},
+  set(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+};
+let log = {};
+try{ log = JSON.parse(store.get("rutina-log")||"{}")||{}; }catch(e){ log = {}; }
+
+const todayIdx = (new Date().getDay()+6)%7;
+let phase = store.get("rutina-fase") || (new Date() >= new Date(2026,10,30) ? "2" : "1");
+let day = todayIdx;
+
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shortW = w => { const m = w.match(/^(\d+(?:[–-]\d+)?)\s*kg/); return m ? m[1]+"<br>kg" : "PC"; };
+
+function render(){
+  document.querySelectorAll(".phase").forEach(b=>b.setAttribute("aria-pressed", b.dataset.phase===phase));
+  const days = PLAN[phase];
+  document.getElementById("days").innerHTML = days.map((d,i)=>
+    `<button class="day" data-i="${i}" aria-pressed="${i===day}">${d.d}${d.t?"":" ·  libre"}</button>`).join("");
+  const d = days[day];
+  let html = `<div class="dayhead"><h2>${d.t ? esc(d.t) : "Descanso"}</h2><p>${d.d}${d.x ? " · "+d.x.length+" ejercicios" : ""}</p></div>`;
+  if(d.rest){
+    html += `<div class="rest-day">${esc(d.rest)}</div>`;
+  } else {
+    html += `<ol class="list">` + d.x.map(([id,sr],k)=>{
+      const e = E[id];
+      const yt = "https://www.youtube.com/watch?v="+V[id];
+      return `<li class="ex" data-id="${id}">
+        <button aria-expanded="false"><span class="num" aria-hidden="true"></span>
+          <span><span class="name">${esc(e.n)}</span><br><span class="sr">${esc(sr)}</span></span>
+          <span class="plate" title="${esc(e.w)}">${shortW(e.w)}</span></button>
+        <div class="body">
+          <div class="vid" data-v="${V[id]}"></div>
+          <p class="start">Para arrancar: ${esc(e.w)}</p>
+          <h3>Cómo se hace</h3>
+          <ol>${e.how.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
+          <p class="warn"><strong>Evita:</strong> ${esc(e.err)}</p>
+          <p class="rest">Descanso entre series: ${esc(e.r)}</p>
+          <div class="actions">
+            <a class="yt-link" href="${yt}" target="_blank" rel="noopener">Abrir en YouTube</a>
+            <label class="log">Último peso <input type="text" inputmode="decimal" placeholder="ej. 16 kg" value="${esc(log[id]||"")}" data-log="${id}"></label>
+          </div>
+        </div></li>`;
+    }).join("") + `</ol>`;
+  }
+  document.getElementById("view").innerHTML = html;
+  const active = document.querySelector('.day[aria-pressed="true"]');
+  if(active) active.scrollIntoView({inline:"center",block:"nearest"});
+}
+
+document.addEventListener("click", ev=>{
+  const p = ev.target.closest(".phase");
+  if(p){ phase = p.dataset.phase; store.set("rutina-fase",phase); render(); return; }
+  const d = ev.target.closest(".day");
+  if(d){ day = +d.dataset.i; render(); return; }
+  const b = ev.target.closest(".ex > button");
+  if(b){
+    const li = b.parentElement; const open = li.classList.toggle("open"); b.setAttribute("aria-expanded", open);
+    const box = li.querySelector(".vid");
+    if(open && box && !box.firstChild){
+      const f = document.createElement("iframe");
+      f.src = "https://www.youtube-nocookie.com/embed/"+box.dataset.v+"?rel=0&playsinline=1";
+      f.title = "Video de la técnica";
+      f.allow = "accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen";
+      f.allowFullscreen = true;
+      box.appendChild(f);
+    }
+  }
+});
+document.addEventListener("input", ev=>{
+  const id = ev.target.dataset && ev.target.dataset.log;
+  if(id){ log[id] = ev.target.value; store.set("rutina-log", JSON.stringify(log)); }
+});
+render();
+</script>
+</body>
+</html>
