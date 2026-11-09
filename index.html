@@ -73,6 +73,18 @@ ol.list{list-style:none;margin:16px 0 0;padding:0;counter-reset:ex}
 .vid{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;margin:4px 0 12px}
 .vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .yt-link{color:var(--plate);font-weight:600;text-decoration:none}
+.map{--hot:#D9472F;--hot-soft:#F4B3A6;--sil:#D3DBE4;display:flex;flex-direction:column;align-items:center;margin:4px 0 14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .map{--hot:#FF6B55;--hot-soft:#7A3A31;--sil:#2C3A4C}}
+:root[data-theme="dark"] .map{--hot:#FF6B55;--hot-soft:#7A3A31;--sil:#2C3A4C}
+.map svg{width:100%;max-width:300px;height:auto}
+.map .sil{fill:var(--sil);opacity:.55}
+.map .mb{fill:var(--sil);stroke:var(--surface);stroke-width:.6}
+.map .mp{fill:var(--hot);stroke:var(--surface);stroke-width:.6}
+.map .ms{fill:var(--hot-soft);stroke:var(--surface);stroke-width:.6}
+.map text{fill:var(--muted);font-size:7px;font-family:"Barlow",system-ui,sans-serif}
+.legend{display:flex;gap:16px;font-size:.85rem;color:var(--muted);margin-top:4px}
+.dot{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:5px;vertical-align:-1px}
+.works{margin:6px 0 0;font-size:.92rem;text-align:center}
 .rules{margin-top:32px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
 .rules h2{font-size:1.8rem;margin:0 0 8px}
 .rules p{margin:0 0 10px}
@@ -196,6 +208,47 @@ const E = {
 
 const V = {pinc:"9fy0A5xWsgk",fondos:"OgjaUueRiII",pplano:"dElcR5RfmOg",lat:"SYle9FXttyE",extcab:"PyNaiTP1PIA",face:"7Ks6tmEuKNo",dompro:"8mhDd9Ahl1M",remob:"ztFJOZQO2vQ",remom:"ThYEWIpPB0o",post:"pgxSZCkaP7s",curlb:"wGYyXpZ4kVs",martillo:"i60DlC_Wj0E",rueda:"xIzWGVYFAH8",bulg:"6d6HlPWgAUs",pmr:"pCrNlGFo7h4",goblet:"FoQsAJ1n0Mk",pant:"1cVC4bwALtE",colgado:"_2tjn3ylBcU",hip:"3SHkXmrQtxQ",zanc:"y8zPm7gJR_E",pmr1:"-2h7UPouOqc",pant1:"MgYx0JJ_B1o",plancha:"euvthEjjuio",domsup:"rfMaANCbzx8",pmil:"A_YA3DM-uPk",flex:"KdX2r-8opqE",curlinc:"P1L6CD-tSnE",extac:"Z8ovGUa8NoM",apart:"NqWQ9n6XDCk"};
 
+const M = {
+  pinc:{p:["pecho"],s:["hombro","triceps"]}, fondos:{p:["pecho","triceps"],s:["hombro"]}, pplano:{p:["pecho"],s:["hombro","triceps"]},
+  lat:{p:["hombro"],s:["trapecio"]}, extcab:{p:["triceps"],s:[]}, face:{p:["hombroPost","trapecio"],s:[]},
+  dompro:{p:["dorsales"],s:["biceps","trapecio","antebrazo"]}, remob:{p:["dorsales","trapecio"],s:["hombroPost","biceps","lumbar"]},
+  remom:{p:["dorsales"],s:["trapecio","biceps"]}, post:{p:["hombroPost"],s:["trapecio"]}, curlb:{p:["biceps"],s:["antebrazo"]},
+  martillo:{p:["biceps","antebrazo"],s:[]}, rueda:{p:["abdomen"],s:["oblicuos","dorsales"]}, bulg:{p:["cuadriceps","gluteos"],s:["isquios"]},
+  pmr:{p:["isquios","gluteos"],s:["lumbar"]}, goblet:{p:["cuadriceps"],s:["gluteos","abdomen"]}, pant:{p:["pantorrillas"],s:[]},
+  colgado:{p:["abdomen"],s:["oblicuos","antebrazo"]}, hip:{p:["gluteos"],s:["isquios"]}, zanc:{p:["cuadriceps","gluteos"],s:["isquios"]},
+  pmr1:{p:["isquios","gluteos"],s:["lumbar"]}, pant1:{p:["pantorrillas"],s:[]}, plancha:{p:["oblicuos"],s:["abdomen","gluteos"]},
+  domsup:{p:["dorsales","biceps"],s:["trapecio"]}, pmil:{p:["hombro"],s:["triceps","trapecio"]}, flex:{p:["pecho"],s:["triceps","hombro","abdomen"]},
+  curlinc:{p:["biceps"],s:[]}, extac:{p:["triceps"],s:[]}, apart:{p:["hombroPost","trapecio"],s:[]}
+};
+const MN = {pecho:"pecho",hombro:"hombros",hombroPost:"hombro posterior",biceps:"bíceps",antebrazo:"antebrazos",abdomen:"abdomen",oblicuos:"oblicuos",cuadriceps:"cuádriceps",pantorrillas:"pantorrillas",trapecio:"trapecio y espalda alta",dorsales:"dorsales",triceps:"tríceps",lumbar:"zona lumbar",gluteos:"glúteos",isquios:"isquiotibiales"};
+const SH = [
+  ["hombro",'<ellipse cx="32" cy="36" rx="6.5" ry="6"/>'],["hombro",'<ellipse cx="68" cy="36" rx="6.5" ry="6"/>'],
+  ["pecho",'<path d="M49,33 L38,33 Q35,40 38,47 Q44,50 49,48 Z"/>'],["pecho",'<path d="M51,33 L62,33 Q65,40 62,47 Q56,50 51,48 Z"/>'],
+  ["biceps",'<ellipse cx="26" cy="50" rx="5" ry="10"/>'],["biceps",'<ellipse cx="74" cy="50" rx="5" ry="10"/>'],
+  ["antebrazo",'<ellipse cx="26" cy="74" rx="4.5" ry="10"/>'],["antebrazo",'<ellipse cx="74" cy="74" rx="4.5" ry="10"/>'],
+  ["abdomen",'<rect x="44" y="51" width="12" height="27" rx="3"/>'],
+  ["oblicuos",'<path d="M37,50 L42.5,52 L42.5,77 L38,74 Z"/>'],["oblicuos",'<path d="M63,50 L57.5,52 L57.5,77 L62,74 Z"/>'],
+  ["cuadriceps",'<ellipse cx="42" cy="102" rx="5.5" ry="16"/>'],["cuadriceps",'<ellipse cx="58" cy="102" rx="5.5" ry="16"/>'],
+  ["pantorrillas",'<ellipse cx="42" cy="138" rx="4" ry="11"/>'],["pantorrillas",'<ellipse cx="58" cy="138" rx="4" ry="11"/>'],
+  ["trapecio",'<path d="M150,24 L137,33 L150,50 L163,33 Z"/>'],
+  ["hombroPost",'<ellipse cx="132" cy="36" rx="6.5" ry="6"/>'],["hombroPost",'<ellipse cx="168" cy="36" rx="6.5" ry="6"/>'],
+  ["dorsales",'<path d="M138,38 L148,50 L148,64 L141,70 Q135,54 138,38 Z"/>'],["dorsales",'<path d="M162,38 L152,50 L152,64 L159,70 Q165,54 162,38 Z"/>'],
+  ["lumbar",'<rect x="144" y="64" width="12" height="14" rx="3"/>'],
+  ["triceps",'<ellipse cx="126" cy="50" rx="5" ry="10"/>'],["triceps",'<ellipse cx="174" cy="50" rx="5" ry="10"/>'],
+  ["antebrazo",'<ellipse cx="126" cy="74" rx="4.5" ry="10"/>'],["antebrazo",'<ellipse cx="174" cy="74" rx="4.5" ry="10"/>'],
+  ["gluteos",'<ellipse cx="143" cy="87" rx="7.5" ry="8"/>'],["gluteos",'<ellipse cx="157" cy="87" rx="7.5" ry="8"/>'],
+  ["isquios",'<ellipse cx="142" cy="110" rx="5.5" ry="13"/>'],["isquios",'<ellipse cx="158" cy="110" rx="5.5" ry="13"/>'],
+  ["pantorrillas",'<ellipse cx="142" cy="138" rx="4.5" ry="11"/>'],["pantorrillas",'<ellipse cx="158" cy="138" rx="4.5" ry="11"/>']
+];
+function bodyMap(id){
+  const m = M[id] || {p:[],s:[]};
+  const sil = x => `<g class="sil" transform="translate(${x} 0)"><circle cx="50" cy="13" r="9"/><rect x="46" y="20" width="8" height="9"/><rect x="35" y="29" width="30" height="53" rx="8"/><rect x="20" y="30" width="12" height="58" rx="6"/><rect x="68" y="30" width="12" height="58" rx="6"/><rect x="36" y="80" width="12" height="76" rx="6"/><rect x="52" y="80" width="12" height="76" rx="6"/></g>`;
+  const parts = SH.map(([k,s]) => s.replace("/>", ` class="${m.p.includes(k) ? "mp" : m.s.includes(k) ? "ms" : "mb"}"/>`)).join("");
+  const names = a => a.map(k => MN[k]).join(", ");
+  const p = names(m.p);
+  return `<div class="map"><svg viewBox="0 0 200 168" role="img" aria-label="Músculos que trabaja: ${p}">${sil(0)}${sil(100)}${parts}<text x="50" y="165" text-anchor="middle">Frente</text><text x="150" y="165" text-anchor="middle">Espalda</text></svg><div class="legend"><span><i class="dot" style="background:var(--hot)"></i>Principal</span>${m.s.length ? '<span><i class="dot" style="background:var(--hot-soft)"></i>Apoyo</span>' : ""}</div><p class="works"><strong>Trabaja:</strong> ${p.charAt(0).toUpperCase()+p.slice(1)}${m.s.length ? " · <strong>Apoyo:</strong> " + names(m.s) : ""}</p></div>`;
+}
+
 const PLAN = {
   "1":[
     {d:"Lunes",t:"Empuje",x:[["pinc","3 × 8–12"],["fondos","3 × 8–12"],["pplano","3 × 8–12"],["lat","3 × 12–20"],["extcab","3 × 10–12"],["face","3 × 15–20"]]},
@@ -250,6 +303,7 @@ function render(){
           <span class="plate" title="${esc(e.w)}">${shortW(e.w)}</span></button>
         <div class="body">
           <div class="vid" data-v="${V[id]}"></div>
+          ${bodyMap(id)}
           <p class="start">Para arrancar: ${esc(e.w)}</p>
           <h3>Cómo se hace</h3>
           <ol>${e.how.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
