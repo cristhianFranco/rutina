@@ -74,9 +74,9 @@ ol.list{list-style:none;margin:16px 0 0;padding:0;counter-reset:ex}
 .vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .yt-link{color:var(--plate);font-weight:600;text-decoration:none}
 .map{--hot:#D9472F;--hot-soft:#F4B3A6;--sil:#D3DBE4;display:flex;flex-direction:column;align-items:center;margin:4px 0 14px}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .map{--hot:#FF6B55;--hot-soft:#7A3A31;--sil:#2C3A4C}}
-:root[data-theme="dark"] .map{--hot:#FF6B55;--hot-soft:#7A3A31;--sil:#2C3A4C}
-.map svg{width:100%;max-width:300px;height:auto}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .map{--hot:#FF5A42;--hot-soft:#E8A296;--sil:#2C3A4C}}
+:root[data-theme="dark"] .map{--hot:#FF5A42;--hot-soft:#E8A296;--sil:#2C3A4C}
+.map svg{width:100%;max-width:400px;height:auto}
 .map .sil{fill:var(--sil);opacity:.55}
 .map .mb{fill:var(--sil);stroke:var(--surface);stroke-width:.6}
 .map .mp{fill:var(--hot);stroke:var(--surface);stroke-width:.6}
@@ -332,7 +332,7 @@ document.addEventListener("click", ev=>{
     const box = li.querySelector(".vid");
     if(open && box && !box.firstChild){
       const f = document.createElement("iframe");
-      f.src = "https://www.youtube-nocookie.com/embed/"+box.dataset.v+"?rel=0&playsinline=1";
+      f.src = "https://www.youtube.com/embed/"+box.dataset.v+"?rel=0&playsinline=1";
       f.title = "Video de la técnica";
       f.allow = "accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen";
       f.allowFullscreen = true;
